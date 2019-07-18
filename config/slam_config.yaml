@@ -1,0 +1,6 @@
+slam_gmapping:
+  angularUpdate: 0.3
+  linearUpdate: 0.5
+  particles: 50
+  xmax: 50
+  ymax: 50
