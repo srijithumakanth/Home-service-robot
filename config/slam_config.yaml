@@ -1,6 +1,8 @@
 slam_gmapping:
-  angularUpdate: 0.3
-  linearUpdate: 0.5
-  particles: 50
-  xmax: 50
-  ymax: 50
+  angularUpdate: 0.5
+  linearUpdate: 1.0
+  particles: 30
+  xmin: -100
+  xmax: 100
+  ymax: 100
+  ymin: -100
