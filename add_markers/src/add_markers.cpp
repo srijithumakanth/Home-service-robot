@@ -48,11 +48,13 @@ int main( int argc, char** argv )
       marker.pose.orientation.y = 0.0;
       marker.pose.orientation.z = 0.0;
       marker.pose.orientation.w = 1.0;
-      sleep(5);
+      
+      
       count += 1;
       break;
 
     case 1:
+      sleep(5);
       ROS_INFO_ONCE("Deleting object from pickup location");
       // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
       marker.action = visualization_msgs::Marker::DELETE;
@@ -78,9 +80,9 @@ int main( int argc, char** argv )
     }  
     
   // Set the scale of the marker -- 1x1x1 here means 1m on a side
-  marker.scale.x = 0.5;
-  marker.scale.y = 0.5;
-  marker.scale.z = 0.5;
+  marker.scale.x = 0.2;
+  marker.scale.y = 0.2;
+  marker.scale.z = 0.2;
 
   // Set the color -- be sure to set alpha to something non-zero!
   marker.color.r = 0.0f;
