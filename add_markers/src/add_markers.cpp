@@ -3,7 +3,7 @@
 
 int main( int argc, char** argv )
 {
-  ros::init(argc, argv, "basic_shapes");
+  ros::init(argc, argv, "add_markers");
   ros::NodeHandle n;
   ros::Rate r(1);
   ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
@@ -15,7 +15,7 @@ int main( int argc, char** argv )
   {
     visualization_msgs::Marker marker;
     // Set the frame ID and timestamp.  See the TF tutorials for information on these.
-    marker.header.frame_id = "/my_frame";
+    marker.header.frame_id = "/map";
     marker.header.stamp = ros::Time::now();
 
     // Set the namespace and id for this marker.  This serves to create a unique ID
@@ -64,21 +64,21 @@ int main( int argc, char** argv )
     marker_pub.publish(marker);
 
     // Cycle between different shapes
-    switch (shape)
-    {
-    case visualization_msgs::Marker::CUBE:
-      shape = visualization_msgs::Marker::SPHERE;
-      break;
-    case visualization_msgs::Marker::SPHERE:
-      shape = visualization_msgs::Marker::ARROW;
-      break;
-    case visualization_msgs::Marker::ARROW:
-      shape = visualization_msgs::Marker::CYLINDER;
-      break;
-    case visualization_msgs::Marker::CYLINDER:
-      shape = visualization_msgs::Marker::CUBE;
-      break;
-    }
+    // switch (shape)
+    // {
+    // case visualization_msgs::Marker::CUBE:
+    //   shape = visualization_msgs::Marker::SPHERE;
+    //   break;
+    // case visualization_msgs::Marker::SPHERE:
+    //   shape = visualization_msgs::Marker::ARROW;
+    //   break;
+    // case visualization_msgs::Marker::ARROW:
+    //   shape = visualization_msgs::Marker::CYLINDER;
+    //   break;
+    // case visualization_msgs::Marker::CYLINDER:
+    //   shape = visualization_msgs::Marker::CUBE;
+    //   break;
+    // }
 
     r.sleep();
   }
