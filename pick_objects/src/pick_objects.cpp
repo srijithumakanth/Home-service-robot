@@ -24,18 +24,18 @@ int main(int argc, char** argv){
   goal1.target_pose.header.frame_id = "map";
   goal1.target_pose.header.stamp = ros::Time::now();
   
-  // set up the frame parameters for goal 1
+  // set up the frame parameters for goal 2
   goal2.target_pose.header.frame_id = "map";
   goal2.target_pose.header.stamp = ros::Time::now();
 
   // Define first position and orientation for the robot to reach
-  goal1.target_pose.pose.position.x = 1.0;
-  goal1.target_pose.pose.position.y = 0.0;
+  goal1.target_pose.pose.position.x = 4.0;
+  goal1.target_pose.pose.position.y = 2.0;
   goal1.target_pose.pose.orientation.w = 1.0;
 
   // Define second position and orientation for the robot to reach
-  goal2.target_pose.pose.position.x = -2.0;
-  goal2.target_pose.pose.position.y = 1.0;
+  goal2.target_pose.pose.position.x = 4.0;
+  goal2.target_pose.pose.position.y = 7.0;
   goal2.target_pose.pose.orientation.w = 1.0;
 
   // Send the first goal position and orientation for the robot to reach
@@ -47,20 +47,36 @@ int main(int argc, char** argv){
 
   // Check if the robot reached its goal
   if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-    ROS_INFO("Hooray, I reached goal 1, give me more!!");
+  {
+    ROS_INFO("Hooray, I reached zone 1, give me more!!");
+  
+  //Wait for 5 seconds before the second goal.
+    sleep(5);
+  }
   else
+  {
     ROS_INFO("I'm sorry, I couldn't make it!");
+    return 0;
+  }
+    
   
   // Send the second goal position and orientation for the robot to reach
   ROS_INFO("Sending goal 2");
   ac.sendGoal(goal2);
 
+  // Wait an infinite time for the results
+  ac.waitForResult();
+
   // Check if the robot reached its goal
   if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-    ROS_INFO("Hooray, I reached goal 2, give me more!!");
+    ROS_INFO("Hooray, I reached zone 2, give me more!!");
   else
+  {
     ROS_INFO("I'm sorry, I couldn't make it!");
-  
-  
+  }
+    
+
+  sleep(5);
   return 0;
+  
 }
