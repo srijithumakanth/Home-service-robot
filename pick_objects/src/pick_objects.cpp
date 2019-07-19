@@ -6,8 +6,8 @@
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 int main(int argc, char** argv){
-  // Initialize the simple_navigation_goals node
-  ros::init(argc, argv, "simple_navigation_goals");
+  // Initialize the pick_objects node
+  ros::init(argc, argv, "pick_objects");
 
   //tell the action client that we want to spin a thread by default
   MoveBaseClient ac("move_base", true);
@@ -17,28 +17,50 @@ int main(int argc, char** argv){
     ROS_INFO("Waiting for the move_base action server to come up");
   }
 
-  move_base_msgs::MoveBaseGoal goal;
+  move_base_msgs::MoveBaseGoal goal1;
+  move_base_msgs::MoveBaseGoal goal2;
 
-  // set up the frame parameters
-  goal.target_pose.header.frame_id = "base_link";
-  goal.target_pose.header.stamp = ros::Time::now();
+  // set up the frame parameters for goal 1
+  goal1.target_pose.header.frame_id = "map";
+  goal1.target_pose.header.stamp = ros::Time::now();
+  
+  // set up the frame parameters for goal 1
+  goal2.target_pose.header.frame_id = "map";
+  goal2.target_pose.header.stamp = ros::Time::now();
 
-  // Define a position and orientation for the robot to reach
-  goal.target_pose.pose.position.x = 1.0;
-  goal.target_pose.pose.orientation.w = 1.0;
+  // Define first position and orientation for the robot to reach
+  goal1.target_pose.pose.position.x = 1.0;
+  goal1.target_pose.pose.position.y = 0.0;
+  goal1.target_pose.pose.orientation.w = 1.0;
 
-   // Send the goal position and orientation for the robot to reach
-  ROS_INFO("Sending goal");
-  ac.sendGoal(goal);
+  // Define second position and orientation for the robot to reach
+  goal2.target_pose.pose.position.x = -2.0;
+  goal2.target_pose.pose.position.y = 1.0;
+  goal2.target_pose.pose.orientation.w = 1.0;
+
+  // Send the first goal position and orientation for the robot to reach
+  ROS_INFO("Sending goal 1");
+  ac.sendGoal(goal1);
 
   // Wait an infinite time for the results
   ac.waitForResult();
 
   // Check if the robot reached its goal
   if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-    ROS_INFO("Hooray, the base moved 1 meter forward");
+    ROS_INFO("Hooray, I reached goal 1, give me more!!");
   else
-    ROS_INFO("The base failed to move forward 1 meter for some reason");
+    ROS_INFO("I'm sorry, I couldn't make it!");
+  
+  // Send the second goal position and orientation for the robot to reach
+  ROS_INFO("Sending goal 2");
+  ac.sendGoal(goal2);
 
+  // Check if the robot reached its goal
+  if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+    ROS_INFO("Hooray, I reached goal 2, give me more!!");
+  else
+    ROS_INFO("I'm sorry, I couldn't make it!");
+  
+  
   return 0;
 }
