@@ -65,63 +65,58 @@ public:
         }
         marker_pub.publish(marker);
 
+        //Odometry callback function definition -->
+        void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
+        {
+            //Robot position
+            float x_rob = msg->pose.pose.position.x;
+            float y_rob = msg->pose.pose.position.y;
+            
+            //Marker scale values
+            float scale_x = marker.scale.x;
+            float scale_y = marker.scale.y;
+
+            //Flags to check if robot reached the goal position
+            bool start_reached = false;
+            bool end_reached = false;
+
+            //Logic to switch between the markers when robot reaches the goals.
+            if ((x_rob < (start_goal[0] + scale_x)) && (x_rob > (start_goal[0] - scale_x)) && (y_rob < (start_goal[1] + scale_y)) && (y_rob > (start_goal[1] - scale_y)))
+            {
+                start_reached = true;
+                ROS_INFO("Start goal reached!");
+                ROS_INFO("Simulating Pickup!");
+                ros::Duration(5).sleep();
+
+                marker.action = visualization_msgs::Marker::DELETE;
+                ROS_INFO("Deleting object");
+                marker_pub.publish(marker);
+            }
+            else if ((x_rob < (end_goal[0] + scale_x)) && (x_rob > (end_goal[0] - scale_x)) && (y_rob < (end_goal[1] + scale_y)) && (y_rob > (end_goal[1] - scale_y)))
+            {
+                end_reached = true;
+                ROS_INFO("End goal reached!");
+                ROS_INFO("Simulating Dropoff!");
+                ros::Duration(5).sleep();
+
+                marker.pose.postion.x = end_goal[0];
+                marker.pose.postion.y = end_goal[1];
+                marker.action = visualization_msgs::Marker::ADD;
+
+                marker_pub.publish(marker);
+            }
+        }
+
 
     }
     
 };
 
 
-
 int main( int argc, char** argv )
 {
-  ros::init(argc, argv, "add_markers");
-  
-  ros::Rate r(1);
-  
-  bool done = false;
-
-
-  while (ros::ok())
-  {
-  
-     
-
-    case 1:
-      sleep(5);
-      ROS_INFO_ONCE("Deleting object from pickup location");
-      // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
-      marker.action = visualization_msgs::Marker::DELETE;
-      count += 1;
-      break;
-    
-    case 2:
-      sleep(5);
-      ROS_INFO_ONCE("Object at dropoff");
-      // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
-      marker.action = visualization_msgs::Marker::ADD;  
-      shape = visualization_msgs::Marker::CUBE;
-      // Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header
-      marker.pose.position.x = 4.0;
-      marker.pose.position.y = 7.0;
-      marker.pose.position.z = 0;
-      marker.pose.orientation.x = 0.0;
-      marker.pose.orientation.y = 0.0;
-      marker.pose.orientation.z = 0.0;
-      marker.pose.orientation.w = 1.0;
-      done = true;
-      break;
-    }  
-  
-  
-
-  // Flag to see if the switch cases completed sucesfully.
-  if(done)
-  {
-    sleep(3);
-    return 0;
-  }
-
-
-    r.sleep();
-  }
+  ros::init(argc, argv, "home_service");
+  home_service home_service;
+  ros::spin();
+  return 0;
 }
