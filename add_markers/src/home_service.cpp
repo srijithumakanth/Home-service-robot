@@ -64,9 +64,10 @@ public:
             sleep(1);
         }
         marker_pub.publish(marker);
+    }
 
         //Odometry callback function definition -->
-        void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
+    void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
         {
             //Robot position
             float x_rob = msg->pose.pose.position.x;
@@ -99,13 +100,15 @@ public:
                 ROS_INFO("Simulating Dropoff!");
                 ros::Duration(5).sleep();
 
-                marker.pose.postion.x = end_goal[0];
-                marker.pose.postion.y = end_goal[1];
+                marker.pose.position.x = end_goal[0];
+                marker.pose.position.y = end_goal[1];
                 marker.action = visualization_msgs::Marker::ADD;
 
                 marker_pub.publish(marker);
             }
-        }
+            
+        
+
 
 
     }
