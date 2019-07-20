@@ -87,10 +87,11 @@ public:
                 start_reached = true;
                 ROS_INFO_ONCE("Start goal reached!");
                 ROS_INFO_ONCE("Simulating Pickup!");
-                ros::Duration(5).sleep();
+                //ros::Duration(5).sleep();
 
                 marker.action = visualization_msgs::Marker::DELETE;
                 ROS_INFO_ONCE("Deleting object");
+                ros::Duration(5).sleep();
                 marker_pub.publish(marker);
             }
             else if ((x_rob < (end_goal[0] + scale_x)) && (x_rob > (end_goal[0] - scale_x)) && (y_rob < (end_goal[1] + scale_y)) && (y_rob > (end_goal[1] - scale_y)))
