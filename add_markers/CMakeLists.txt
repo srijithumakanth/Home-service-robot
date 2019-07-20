@@ -134,6 +134,8 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
  add_executable(${PROJECT_NAME} src/add_markers.cpp)
+ add_executable(home_service src/home_service.cpp)
+ 
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -149,6 +151,10 @@ include_directories(
  target_link_libraries(${PROJECT_NAME}
    ${catkin_LIBRARIES}
  )
+ target_link_libraries(home_service
+   ${catkin_LIBRARIES}
+ )
+
 
 #############
 ## Install ##
