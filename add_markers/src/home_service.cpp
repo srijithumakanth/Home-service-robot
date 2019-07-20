@@ -17,7 +17,7 @@ public:
     home_service()
     {
         marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
-        odom_sub = n.subscribe("/odom", &home_service::odomCallback, this);
+        odom_sub = n.subscribe("/odom", 1, &home_service::odomCallback, this);
         
         // Set the frame ID and timestamp.  See the TF tutorials for information on these.
         marker.header.frame_id = "/map";
