@@ -10,7 +10,7 @@ private:
     ros::Publisher marker_pub;
     ros::Subscriber odom_sub;
     visualization_msgs::Marker marker;
-    double start_goal[2] = {4.0, 2.0}; //star goal (x,y)
+    double start_goal[2] = {4.0, 2.0}; //start goal (x,y)
     double end_goal[2] = {4.0, 7.0};  //end goal(x,y)
     
 public:
@@ -27,17 +27,50 @@ public:
         // Any marker sent with the same namespace and id will overwrite the old one
         marker.ns = "basic_shapes";
         marker.id = 0;
+
+        // Set the marker type.  Initially this is CUBE, and cycles between that and SPHERE, ARROW, and CYLINDER
+        marker.type = visualization_msgs::Marker::CUBE;
+
+        // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
+        marker.action = visualization_msgs::Marker::ADD;
+
+        // Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header
+        //Initialized at the start goal position.
+        marker.pose.position.x = start_goal[0]; 
+        marker.pose.position.y = start_goal[1];
+        marker.pose.position.z = 0;
+        marker.pose.orientation.x = 0.0;
+        marker.pose.orientation.y = 0.0;
+        marker.pose.orientation.z = 0.0;
+        marker.pose.orientation.w = 1.0;
+
+        // Set the scale of the marker -- 1x1x1 here means 1m on a side
+        marker.scale.x = 0.2;
+        marker.scale.y = 0.2;
+        marker.scale.z = 0.2;
+
+        // Set the color -- be sure to set alpha to something non-zero!
+        marker.color.r = 0.0f;
+        marker.color.g = 0.0f;
+        marker.color.b = 1.0f;
+        marker.color.a = 1.0;
+
+        marker.lifetime = ros::Duration();
+
+        // Publish the marker
+        while (marker_pub.getNumSubscribers() < 1)
+        {
+            ROS_WARN_ONCE("Please create a subscriber to the marker");
+            sleep(1);
+        }
+        marker_pub.publish(marker);
+
+
     }
     
 };
 
-home_service::home_service(/* args */)
-{
-}
 
-home_service::~home_service()
-{
-}
 
 int main( int argc, char** argv )
 {
@@ -47,44 +80,11 @@ int main( int argc, char** argv )
   
   bool done = false;
 
-  // To keep track of switch cases
-  int count = 0;
-
-  // Set our initial shape type to be a cube
-  uint32_t shape = visualization_msgs::Marker::CUBE;
 
   while (ros::ok())
   {
-    visualization_msgs::Marker marker;
-    
-
-    
-
-    // Set the marker type.  Initially this is CUBE, and cycles between that and SPHERE, ARROW, and CYLINDER
-    marker.type = shape;
-
-    // marker.lifetime = ros::Duration();
-
-    // Cycle between different shapes
-    switch (count)
-    {
-    case 0:
-      ROS_INFO_ONCE("Object for pickup");
-      // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
-      marker.action = visualization_msgs::Marker::ADD;  
-      shape = visualization_msgs::Marker::CUBE;
-      // Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header
-      marker.pose.position.x = 4.0;
-      marker.pose.position.y = 2.0;
-      marker.pose.position.z = 0;
-      marker.pose.orientation.x = 0.0;
-      marker.pose.orientation.y = 0.0;
-      marker.pose.orientation.z = 0.0;
-      marker.pose.orientation.w = 1.0;
-      
-      
-      count += 1;
-      break;
+  
+     
 
     case 1:
       sleep(5);
@@ -111,29 +111,8 @@ int main( int argc, char** argv )
       done = true;
       break;
     }  
-    
-  // Set the scale of the marker -- 1x1x1 here means 1m on a side
-  marker.scale.x = 0.2;
-  marker.scale.y = 0.2;
-  marker.scale.z = 0.2;
-
-  // Set the color -- be sure to set alpha to something non-zero!
-  marker.color.r = 0.0f;
-  marker.color.g = 0.0f;
-  marker.color.b = 1.0f;
-  marker.color.a = 1.0;
-
-  // Publish the marker
-  while (marker_pub.getNumSubscribers() < 1)
-  {
-    if (!ros::ok())
-    {
-      return 0;
-    }
-    ROS_WARN_ONCE("Please create a subscriber to the marker");
-    sleep(1);
-  }
-  marker_pub.publish(marker);
+  
+  
 
   // Flag to see if the switch cases completed sucesfully.
   if(done)
