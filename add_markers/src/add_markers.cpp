@@ -58,11 +58,11 @@ int main( int argc, char** argv )
       ROS_INFO_ONCE("Deleting object from pickup location");
       // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
       marker.action = visualization_msgs::Marker::DELETE;
-      sleep(5);
       count += 1;
       break;
     
     case 2:
+      sleep(5);
       ROS_INFO_ONCE("Object at dropoff");
       // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
       marker.action = visualization_msgs::Marker::ADD;  
