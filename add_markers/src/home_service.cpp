@@ -16,7 +16,7 @@ private:
 public:
     home_service()
     {
-        marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
+        marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 10);
         odom_sub = n.subscribe("/odom", 1, &home_service::odomCallback, this);
         
         // Set the frame ID and timestamp.  See the TF tutorials for information on these.
@@ -85,19 +85,19 @@ public:
             if ((x_rob < (start_goal[0] + scale_x)) && (x_rob > (start_goal[0] - scale_x)) && (y_rob < (start_goal[1] + scale_y)) && (y_rob > (start_goal[1] - scale_y)))
             {
                 start_reached = true;
-                ROS_INFO("Start goal reached!");
-                ROS_INFO("Simulating Pickup!");
+                ROS_INFO_ONCE("Start goal reached!");
+                ROS_INFO_ONCE("Simulating Pickup!");
                 ros::Duration(5).sleep();
 
                 marker.action = visualization_msgs::Marker::DELETE;
-                ROS_INFO("Deleting object");
+                ROS_INFO_ONCE("Deleting object");
                 marker_pub.publish(marker);
             }
             else if ((x_rob < (end_goal[0] + scale_x)) && (x_rob > (end_goal[0] - scale_x)) && (y_rob < (end_goal[1] + scale_y)) && (y_rob > (end_goal[1] - scale_y)))
             {
                 end_reached = true;
-                ROS_INFO("End goal reached!");
-                ROS_INFO("Simulating Dropoff!");
+                ROS_INFO_ONCE("End goal reached!");
+                ROS_INFO_ONCE("Simulating Dropoff!");
                 ros::Duration(5).sleep();
 
                 marker.pose.position.x = end_goal[0];
@@ -107,9 +107,6 @@ public:
                 marker_pub.publish(marker);
             }
             
-        
-
-
 
     }
     
@@ -120,6 +117,12 @@ int main( int argc, char** argv )
 {
   ros::init(argc, argv, "home_service");
   home_service home_service;
-  ros::spin();
+  ros::Rate loop_rate(50);
+  while(ros::ok())
+  {
+      ros::spinOnce();
+      loop_rate.sleep();
+  }
+  
   return 0;
 }
